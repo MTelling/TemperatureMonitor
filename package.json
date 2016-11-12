@@ -1,0 +1,23 @@
+{
+  "name": "temperaturemonitor",
+  "version": "1.0.0",
+  "description": "A temperature monitor for my home. Reading from temperatures from db.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "temperature",
+    "monitor",
+    "server",
+    "socket"
+  ],
+  "author": "Morten Telling",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "mongodb": "^2.2.11",
+    "socketio": "^1.0.0",
+    "winston": "^2.3.0"
+  }
+}
