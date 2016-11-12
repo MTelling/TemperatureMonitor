@@ -1,7 +1,0 @@
-require('./controllers/app.js')
-
-
-
-
-
-
