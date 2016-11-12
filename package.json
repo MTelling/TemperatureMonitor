@@ -4,7 +4,7 @@
   "description": "A temperature monitor for my home. Reading from temperatures from db.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon app.js"
       },
   "keywords": [
     "temperature",

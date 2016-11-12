@@ -1,5 +1,6 @@
 // Init express and socket io. 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var constants = require('../helpers/constants');
 // Setup socket connection.  
@@ -8,6 +9,9 @@ var socket = require('./socket')(http);
 // Setup logging
 const winston = require('winston');
 winston.level = 'info';
+
+
+app.use('/static', express.static('public'));
 
 // From here on node.js
 // Setup routes

@@ -23,91 +23,9 @@
         <div id="myDiv" style="width: 800px; height: 400px;">
 
 
-        
-
         <!-- Init socket.io -->
         <script src="/socket.io/socket.io.js"></script>
-        <script>
-            var socket = io();
-            var temp = document.getElementById('temperature');
-            var requestNew = function() {
-                console.log("Requesting new temp.");
-                socket.emit("refreshTemp");
-            };
-
-            // Request new data immediately at first connection.
-            requestNew();
-
-            const interval = 1000 * 3 // 1000ms * x
-
-            setInterval(function() { requestNew() }, interval);
-
-
-            var last = {};
-            socket.on('newTemp', (data) => {
-                console.log("Received data.");
-                temperature.innerText = data.temperature;
-                time.innerText = new Date(data.date);
-                console.log("Last:" + last.date);
-                console.log("Current:" + data.date);
-                if (last.date != data.date) {
-                    updated.innerText = "Updated!";
-                    last = data;
-                } else {
-                    updated.innerText = "";
-                }
-            });
-        </script>
-
-
-
-
-        <!-- Init graph -->
-        <script>
-            socket.emit('requestLongTerm', 5);
-            
-
-            socket.on('sentLongTerm', (data) => {
-
-                var temps = [];
-                var datetimes = [];
-                data.forEach((datapoint) => {
-                    temps.push(datapoint.temperature);
-                    let date = new Date(datapoint.date); 
-                    var str_date = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-                    datetimes.push(str_date);
-                });
-
-                temps.reverse();
-                datetimes.reverse();
-
-                console.log(temps);
-                console.log(datetimes);
-                
-                var data = [
-                  {
-                    y: temps,
-                    x: datetimes,
-                    type: 'line',
-                    line: {
-                        width: 1,
-                        shape: 'spline'
-                    }
-                  }
-                ];
-
-                TESTER = document.getElementById('tester');
-                
-                Plotly.plot('myDiv', data);
-            });
-            
-
-        </script>
-
-
-
-
-
+        <script src="/static/js/app_socket.js"></script>
 
 
     </body>
