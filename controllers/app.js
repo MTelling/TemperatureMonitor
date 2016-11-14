@@ -8,7 +8,7 @@ var socket = require('./socket')(http);
 
 // Setup logging
 const winston = require('winston');
-winston.level = 'info';
+winston.level = 'silly';
 
 
 app.use('/static', express.static('public'));

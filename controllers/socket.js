@@ -1,9 +1,8 @@
 var db = require('../models/db');
 
 const winston = require('winston');
-winston.level = 'silly';
 
-const refreshRate = 1000 * 6; // in ms.  
+const refreshRate = 1000 * 6; // in ms. 
 
 // Setup cache 
 var cached = {
@@ -13,7 +12,11 @@ var cached = {
               temperature: 21.125 }
 };
 
+var cached_latest24 = {};
+
 function refreshTemp(socket) {
+    
+
     var currentTime = new Date().getTime();
     var cachedTime = cached.time.getTime();
 
@@ -42,17 +45,40 @@ function refreshTemp(socket) {
     }
 }
 
-function requestLongTerm(socket, n_elements) {
-    db.getNElements(n_elements, (err, data) => {
-        if (err) {
-            socket.emit('error', err);
-            return winston.log('error', err);
-        } 
+function getLatest24(socket) {
 
-        winston.log("info", "Sent " + n_elements + " temperatures to server!");
-        socket.emit("sentLongTerm", data);
-    
-    });
+    // Try to get data from cache. 
+    // If it's not available query db for it. 
+    // Currently this returns cached data if the hour or date hasn't changed.
+
+    if (!cached_latest24) {
+        queryDBForLatest24(socket);
+    } else {
+        if (cached_latest24.hour != new Date().getHours()
+            || cached_latest24.day != new Date().getDate()) {
+            queryDBForLatest24(socket);
+        } else {
+            winston.log("info", "Emitting cached data for latest 24 hours!");
+            socket.emit('sentLatest24', cached_latest24.data);
+        }
+    }
+}
+
+function queryDBForLatest24(socket) {
+    db.get24((err, data) => {
+            if (err) return winston.log("error", err);
+
+            winston.log("info", "Emitting DB data for latest 24 hours!");
+
+            var currentDate = new Date();
+            cached_latest24 = {
+                hour: currentDate.getHours(),
+                day: currentDate.getDate(),
+                data: data
+            };
+
+            socket.emit('sentLatest24', data);
+        });
 }
 
 module.exports = function(http) {
@@ -68,13 +94,15 @@ module.exports = function(http) {
             refreshTemp(socket);
         });
 
-        socket.on('requestLongTerm', (n_elements) => {
-            requestLongTerm(socket, n_elements);
+        socket.on('requestLatest24', () => {
+            winston.log("Debug", "Client requested data for last 24 hours.");
+            getLatest24(socket);
         })
 
         // Handle client disconnect. 
         socket.on('disconnect', () => {
             winston.log('info', "Client disconnected.");  
         });
+
     });
 }
