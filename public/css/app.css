@@ -1,4 +1,4 @@
-#temp_gauge {
+#temp_gauge, #humidity_gauge {
     margin: auto;
     width: 70%;
     height: 80%;

@@ -1,29 +1,30 @@
-var db = require('../models/db');
+let dbConnection = require('../models/db');
+let db = new dbConnection.DB();
 
 const winston = require('winston');
 
 const refreshRate = 1000 * 6; // in ms. 
 
 // Setup cache 
-var cached = {
+let cached = {
     time:new Date(0),
     data: { _id: null,
               date: "2016-11-12T14:24:57.947Z",
               temperature: 21.125 }
 };
 
-var cached_latest24 = {};
+let cached_latest24 = {};
 
-function refreshTemp(socket) {
+let refreshTemp = function(socket) {
     
 
-    var currentTime = new Date().getTime();
-    var cachedTime = cached.time.getTime();
+    let currentTime = new Date().getTime();
+    let cachedTime = cached.time.getTime();
 
     // If the cached object is older than the refresh rate. 
     if (currentTime > cachedTime + refreshRate) {
-        // Connect to db and retrieve latest element. 
-        winston.log('debug', "Trying to get temp from db");
+        // Connect to DB and retrieve latest element.
+        winston.log('debug', "Trying to get temp from DB");
         db.getOne((err, data) => {
 
             if (err) {
@@ -31,7 +32,7 @@ function refreshTemp(socket) {
                 return winston.log('error', err);
             } 
 
-            winston.log('debug', "Emitting temperature from db.");
+            winston.log('debug', "Emitting temperature from DB.");
             // If no errors occured emit the newest temp json. 
             socket.emit('newTemp', data);
             
@@ -43,12 +44,12 @@ function refreshTemp(socket) {
         winston.log('debug', "Emitting temperature from cache.");
         socket.emit('newTemp', cached.data);
     }
-}
+};
 
-function getLatest24(socket) {
+let getLatest24 = function (socket) {
 
     // Try to get data from cache. 
-    // If it's not available query db for it. 
+    // If it's not available query DB for it.
     // Currently this returns cached data if the hour or date hasn't changed.
 
     if (!cached_latest24) {
@@ -62,15 +63,15 @@ function getLatest24(socket) {
             socket.emit('sentLatest24', cached_latest24.data);
         }
     }
-}
+};
 
-function queryDBForLatest24(socket) {
+let queryDBForLatest24 = function (socket) {
     db.get24((err, data) => {
             if (err) return winston.log("error", err);
 
             winston.log("info", "Emitting DB data for latest 24 hours!");
 
-            var currentDate = new Date();
+            let currentDate = new Date();
             cached_latest24 = {
                 hour: currentDate.getHours(),
                 day: currentDate.getDate(),
@@ -79,7 +80,7 @@ function queryDBForLatest24(socket) {
 
             socket.emit('sentLatest24', data);
         });
-}
+};
 
 module.exports = function(http) {
     // Setup socket events.
@@ -97,7 +98,7 @@ module.exports = function(http) {
         socket.on('requestLatest24', () => {
             winston.log("Debug", "Client requested data for last 24 hours.");
             getLatest24(socket);
-        })
+        });
 
         // Handle client disconnect. 
         socket.on('disconnect', () => {
@@ -105,4 +106,4 @@ module.exports = function(http) {
         });
 
     });
-}
+};
