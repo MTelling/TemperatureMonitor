@@ -24,6 +24,13 @@
                     
                     <a class="navbar-brand" href="#"><span>Temperature</span>Monitor</a>
                     
+
+                </div>
+                <div class="navbar-update-message">
+                    <span id="updated-text">
+                                    Data updated <span id="updated-seconds"> 0 </span>
+                                    seconds ago at <span id="updated-time"></span>
+                    </span>
                 </div>
                                 
             </div><!-- /.container-fluid -->
@@ -35,11 +42,8 @@
                     <div class="panel panel-default">
                         <div class="panel-body" style="padding-top:0">
                             <h4>
-                                Current Temperature - 
-                                <span id="updated-text">
-                                    Updated <span id="updated-seconds"> 0 </span>
-                                    Seconds Ago At <span id="updated-time"></span>
-                                </span>
+                                Current Temperature 
+                                
                             </h4>
                             <div id="temp_gauge"></div>
                         </div>
@@ -49,7 +53,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body" style="padding-top:0">
                             <h4>
-                                Current Humidity - 
+                                Current Humidity
                                 
                             </h4>
                             <div id="humidity_gauge"></div>
@@ -62,15 +66,26 @@
              <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">24 Hours</div>
+                        <div class="panel-heading">Graph over latest <span id="graph-interval"></span></div>
                         <div class="panel-body">
+                            
                             <div class="canvas-wrapper">
                                 <canvas class="main-chart" id="line-chart" height="200" width="600"></canvas>
                             </div>
+                            </br>
+                            <select id="graph-interval-selector">
+                                <option value="0">View 2 hour graph</option>
+                                <option value="1">View 12 hour graph</option>
+                                <option value="2">View 24 hour graph</option>
+                                <option value="3">View 2 day graph</option>
+                                <!--<option value="4">View 7 day graph</option>-->
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
+
+
 
 
         </div>  <!--/.main-->
@@ -82,8 +97,9 @@
         <script src="/static/js/jquery-1.11.1.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
         <script src="/static/js/progressbar.js"></script>
-        <script src="/static/js/chart.min.js"></script>
+        <!--<script src="/static/js/chart.min.js"></script>-->
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
         <!-- Setup temperature gauge -->
         <script src="/static/js/temp_gauge.js"></script>
         <script src="/static/js/humidity_gauge.js"></script>

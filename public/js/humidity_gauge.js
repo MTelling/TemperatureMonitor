@@ -20,21 +20,15 @@ var humidityBar = new ProgressBar.SemiCircle(humidity_gauge, {
   // Set default step function for all animate calls
   step: (state, bar) => {
     bar.path.setAttribute('stroke', state.color);
-    bar.setText(_humidity.toFixed(2) + "%");
+    bar.setText(_humidity.toFixed(0) + "%");
     bar.text.style.color = state.color;
   }
 });
 
 humidityBar.text.style.fontSize = '3rem';
 
-
-
 function updateHumidityGauge(humidity) {
     console.log("Updating humidity")
     _humidity = humidity;
     humidityBar.animate(humidity / 100);
 }
-
-setInterval(()=> {
-    updateHumidityGauge(50);
-}, 1000);
