@@ -116,7 +116,7 @@ $( document ).ready(function () {
         for (var i = 0; i < data.length; i++) {
             my_labels.push(formatFunction(data[i]));
             my_temps.push(data[i].temp);
-            my_humidities.push(Math.floor(data[i].humidity));
+            my_humidities.push(data[i].humidity);
 
         }
         updateChart(my_labels, my_temps, my_humidities);
