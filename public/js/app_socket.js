@@ -3,7 +3,7 @@ $( document ).ready(function () {
     var socket = io();
 
     // Constants for how often to update. 
-    const refreshRate = 100; // Seconds between each refresh. 
+    const refreshRate = 5; // Seconds between each refresh. 
     const interval = 1000 * refreshRate // 1000ms * refreshRate. 
     
     // Get DOM elements. 
