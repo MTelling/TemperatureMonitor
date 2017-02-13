@@ -69,7 +69,7 @@ $( document ).ready(function () {
             secondsSinceUpdate = 0;
 
             var date = new Date(cache.date);
-            var strDate = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            var strDate = pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds());
 
             updatedTime.innerText = strDate;
         } else {
