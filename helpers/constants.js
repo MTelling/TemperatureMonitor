@@ -8,6 +8,5 @@ module.exports = Object.freeze({
 
     // Server related
     SERVER_PORT: 3000,
-    PATH: "/Users/Morten/git/TemperatureMonitor/"
-
+    PATH: "/home/pi/TemperatureMonitor/"
 })
