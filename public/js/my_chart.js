@@ -40,15 +40,24 @@ var updateChart = function(labels, temps, humidities) {
         },
         options: {
             scales: {
-                
                 yAxes: [{
                     type: "linear",
                     position: "left",
                     id: "y-axis-temp",
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return value.toFixed(2) + "°C";
+                        }
+                    }
                 }, {
                     type: "linear",
                     position: "right",
                     id: "y-axis-humidity",
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return value.toFixed(1) + "%";
+                        }
+                    }
                 }],
             }
         }
