@@ -48,3 +48,7 @@ jspm_packages
 
 # Secret
 secret.js
+
+
+.idea/
+.vscode/
