@@ -1,12 +1,48 @@
+const winston = require('winston');
+
 exports.DB = function DB() {
     this.mysql = require('mysql');
     this.secret = require('./secret');
-    this.connection = this.mysql.createConnection({
+
+    this.pool = this.mysql.createPool({
         host     : 'localhost',
         user     : this.secret.DB_USER,
         password : this.secret.DB_PASSWORD,
         database : 'monitordb'
     });   
+};
+
+/**
+ * Gets a connection from the db pool,
+ * then queries the db and if no error occurs,
+ * hands back the connection to the pool and
+ * calls the callback with the result. 
+ */
+exports.DB.prototype.query = function(sql, callback) {
+    this.pool.getConnection(function(err, connection) {
+        if (err) {
+            winston.log('warn', "Failed getting connection from db pool: " + err.message);
+            callback(err, null);
+            return;
+        }
+
+        connection.query("SET sql_mode = ''", function(error, results, fields) {
+            if (error) winston.log("warn", "Couldn't set sql mode: " + err.message);
+        });
+
+        connection.query(sql, function(err, results, fields) {
+            connection.release();
+            if (err) {
+                winston.log('warn', "Failed on query! " + sql);
+                winston.log('warn', err.message);
+                callback(err, null);
+                return;
+            };
+
+            callback(null, results);
+        });
+
+    });
 };
 
 exports.DB.prototype.getSingle = function(callback) {
@@ -17,10 +53,7 @@ exports.DB.prototype.getSingle = function(callback) {
         LIMIT 1;
     `;
 
-    this.connection.query(sql, function (error, results, fields) {
-        if (error) throw error;
-        callback(results[0]);
-    });
+    this.query(sql, callback);
 };
 
 exports.DB.prototype.getLastHoursWithInterval = function(hours, minuteInterval, callback) {
@@ -36,14 +69,7 @@ exports.DB.prototype.getLastHoursWithInterval = function(hours, minuteInterval, 
         ORDER BY date;
     `;
 
-    this.connection.query("SET sql_mode = ''", function(error, results, fields) {
-        if (error) throw error;
-    });
-
-    this.connection.query(sql, function(error, results, fields) {
-        if (error) throw error;
-        callback(results);
-    });
+    this.query(sql, callback);
 };
 
 exports.DB.prototype.getLastDaysWithInterval = function(days, hourInterval, callback) {
@@ -59,14 +85,7 @@ exports.DB.prototype.getLastDaysWithInterval = function(days, hourInterval, call
         ORDER BY date;
     `;
 
-    this.connection.query("SET sql_mode = ''", function(error, results, fields) {
-        if (error) throw error;
-    });
-
-    this.connection.query(sql, function(error, results, fields) {
-        if (error) throw error;
-        callback(results);
-    });
+    this.query(sql, callback);
 };
 
 

@@ -60,9 +60,9 @@ $( document ).ready(function () {
         * update the cache and tell system that new data is received.
         * 
         * Also format the date as a string and display that. */
-        
         if (cache.date != data.date) {
             console.log("Updated!");
+            console.log(data);
             cache = data;
             updateTempGauge(data.temp);
             updateHumidityGauge(data.humidity);
@@ -83,6 +83,12 @@ $( document ).ready(function () {
     });
 
 
+    /**
+     * This handles the case where the server sends an error.
+     */
+    socket.on("dbError", () => {
+        console.log("Server sent db error!");
+    });
 
     /**
      * What follows here handles the graph.

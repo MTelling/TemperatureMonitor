@@ -17,43 +17,49 @@ module.exports = function(http) {
 
         socket.on('refreshTemp', () => {
             winston.log("debug", "Client requested single temp");
-            db.getSingle(function(data) {
-                socket.emit('newTemp', data);
+            db.getSingle(function(err, data) {
+                if (err) socket.emit('dbError');
+                else socket.emit('newTemp', data[0]);
             });
         });
 
         socket.on('request2hour', () => {
             winston.log("debug", "Client requested data for last 2 hours.");
-            db.getLastHoursWithInterval(2, 5, function(data) {
-                socket.emit('sent2hour', data);
+            db.getLastHoursWithInterval(2, 5, function(err, data) {
+                if (err) socket.emit('dbError');
+                else socket.emit('sent2hour', data);
             });
         });
 
         socket.on('request12hour', () => {
             winston.log("debug", "Client requested data for last 12 hours.");
-            db.getLastHoursWithInterval(12, 30, function(data) {
-                socket.emit('sent12hour', data);
+            db.getLastHoursWithInterval(12, 30, function(err, data) {
+                if (err) socket.emit('dbError');
+                else socket.emit('sent12hour', data);
             });
         });
 
         socket.on('request24hour', () => {
             winston.log("debug", "Client requested data for last 24 hours.");
-            db.getLastHoursWithInterval(24, 60, function(data) {
-                socket.emit('sent24hour', data);
+            db.getLastHoursWithInterval(24, 60, function(err, data) {
+                if (err) socket.emit('dbError');
+                else socket.emit('sent24hour', data);
             });
         });
 
         socket.on('request2day', () => {
             winston.log("debug", "Client requested data for last 2 days.");
-            db.getLastDaysWithInterval(2, 2, function(data) {
-                socket.emit('sent2day', data);
+            db.getLastDaysWithInterval(2, 2, function(err, data) {
+                if (err) socket.emit('dbError');
+                else socket.emit('sent2day', data);
             });
         });
 
         socket.on('request7day', () => {
             winston.log("debug", "Client requested data for last 7 days.");
-            db.getLastDaysWithInterval(7, 4, function(data) {
-                socket.emit('sent7day', data);
+            db.getLastDaysWithInterval(7, 4, function(err, data) {
+                if (err) socket.emit('dbError');
+                else socket.emit('sent7day', data);
             });
         });
 
