@@ -15,11 +15,11 @@ module.exports = function(http) {
         
         winston.log('info', "Client connected.");
 
-        socket.on('refreshTemp', () => {
+        socket.on('request1reading', () => {
             winston.log("debug", "Client requested single temp");
             db.getSingle(function(err, data) {
-                if (err) socket.emit('dbError');
-                else socket.emit('newTemp', data[0]);
+                if (err) socket.emit('dberror');
+                else socket.emit('sent1reading', data[0]);
             });
         });
 

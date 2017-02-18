@@ -12,7 +12,7 @@ $( document ).ready(function () {
     
     var requestNew = function() {
         console.log("Requesting new temp.");
-        socket.emit("refreshTemp");
+        socket.emit("request1reading");
     };
     
     // Setup graph
@@ -45,24 +45,19 @@ $( document ).ready(function () {
     requestNew();
 
     //////////////////////////////////////////////////////////////////////
-
-   
-    
-
     // Cache the latest element. 
     var cache = {};
 
     /**
     * This function handles the request of a single new temperature. 
     */
-    socket.on('newTemp', (data) => {
+    socket.on('sent1reading', (data) => {
         /* If data received is different from the cached
         * update the cache and tell system that new data is received.
         * 
         * Also format the date as a string and display that. */
         if (cache.date != data.date) {
-            console.log("Updated!");
-            console.log(data);
+            console.log("New reading received!");
             cache = data;
             updateTempGauge(data.temp);
             updateHumidityGauge(data.humidity);
@@ -86,8 +81,9 @@ $( document ).ready(function () {
     /**
      * This handles the case where the server sends an error.
      */
-    socket.on("dbError", () => {
+    socket.on("dberror", () => {
         console.log("Server sent db error!");
+        alert("Server sent db error!");
     });
 
     /**
