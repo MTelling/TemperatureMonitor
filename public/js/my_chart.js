@@ -32,7 +32,7 @@ var updateChart = function(labels, temps, humidities) {
                     borderColor: "rgba(91, 97, 120, 0.5)",
                     data : humidities,
                     yAxisID: "y-axis-humidity",
-                    lineTension: 0.0,
+                    lineTension: 0.2,
                     pointRadius: 0,
                     pointHoverRadius: 0
                 }
@@ -40,15 +40,24 @@ var updateChart = function(labels, temps, humidities) {
         },
         options: {
             scales: {
-                
                 yAxes: [{
                     type: "linear",
                     position: "left",
                     id: "y-axis-temp",
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return value.toFixed(2) + "°C";
+                        }
+                    }
                 }, {
                     type: "linear",
                     position: "right",
                     id: "y-axis-humidity",
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return value.toFixed(1) + "%";
+                        }
+                    }
                 }],
             }
         }

@@ -3,7 +3,7 @@ $( document ).ready(function () {
     var socket = io();
 
     // Constants for how often to update. 
-    const refreshRate = 100; // Seconds between each refresh. 
+    const refreshRate = 5; // Seconds between each refresh. 
     const interval = 1000 * refreshRate // 1000ms * refreshRate. 
     
     // Get DOM elements. 
@@ -69,7 +69,7 @@ $( document ).ready(function () {
             secondsSinceUpdate = 0;
 
             var date = new Date(cache.date);
-            var strDate = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            var strDate = pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds());
 
             updatedTime.innerText = strDate;
         } else {
@@ -116,7 +116,7 @@ $( document ).ready(function () {
         for (var i = 0; i < data.length; i++) {
             my_labels.push(formatFunction(data[i]));
             my_temps.push(data[i].temp);
-            my_humidities.push(Math.floor(data[i].humidity));
+            my_humidities.push(data[i].humidity);
 
         }
         updateChart(my_labels, my_temps, my_humidities);
